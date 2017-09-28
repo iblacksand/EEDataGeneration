@@ -1,0 +1,2 @@
+Time for Encryption: 161ms
+Time for Decryption: 137ms

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Security.Cryptography;
-using System.Timers;
+using System.Diagnostics;
 
 namespace DataGeneration
 {
@@ -20,7 +20,7 @@ namespace DataGeneration
             Int32.TryParse(Prompt("Choose an action.(EX: 1)"), out response);
             switch(response){
                 case 1:
-                    GenerateData();
+                    GenerateData(Prompt("What is the file for the data"),Double.Parse(Prompt("What percentage of data is fake?(.1 or .25 or ..)")));
                     break;
                 case 2:
                     GenerateEncryptedData();
@@ -44,56 +44,52 @@ namespace DataGeneration
             if(File.Exists(path)) File.Delete(path);
         }
 
-        static void GenerateData(){
-            string[] lines = File.ReadAllLines("all-data.csv");
-            DeleteFile("FakeData.csv");
-            DeleteFile("RealData.csv");
+        static void GenerateData(string filepath, double percent){
+            string[] lines = File.ReadAllLines(filepath);
+            DeleteFile("FakeData.txt");
+            DeleteFile("RealData.txt");
             Console.WriteLine("Creating Fake Data");
-            string[] fakedata = new string[460];
-            List<int> rngints = new List<int>();
+            string[] fakedata = new string[(int)(lines.Length * percent)];
+            List<string> fake = new List<String>();
+            List<string> real = new List<String>(lines);
+             List<int> rngints = new List<int>();
             Random rand = new Random();
             Console.WriteLine("Generating index");
-            while(rngints.Count != 460){
-                int guess = rand.Next(4600);
-                if(!rngints.Contains(guess)) rngints.Add(guess);
-            }
-            string faketext = "";
-            Console.WriteLine("Generating fake data");
-            foreach(int x in rngints){
-                faketext += lines[x].Trim() + "\n";
-            }
-            string realdata = "";
-            Console.WriteLine("Generating real data");
-            for(int i = 0; i < 4600; i++){
-                if(!rngints.Contains(i)){
-                    realdata += lines[i].Trim() + "\n";
+            while(rngints.Count != (int)(lines.Length * percent)){
+                int guess = rand.Next(lines.Length);
+                if(!rngints.Contains(guess)){
+                    rngints.Add(guess);
+                    real.Remove(lines[guess]);
+                    fake.Add(lines[guess]);
                 }
             }
-
-            File.WriteAllText("FakeData.csv",faketext);
-            File.WriteAllText("RealData.csv", realdata);
+            File.WriteAllLines("FakeData.txt",fake.ToArray());
+            File.WriteAllLines("RealData.txt", real.ToArray());
             Console.WriteLine("Done");
         }
 
         static void GenerateEncryptedData(){
-            byte[] content = File.ReadAllBytes("RealData.csv");
-            DeleteFile("EncryptedRealData.csv");
+            byte[] content = File.ReadAllBytes("RealData.txt");
+            DeleteFile("EncryptedRealData.txt");
             DeleteFile("key.txt");
             DeleteFile("iv.txt");
-            File.WriteAllBytes("EncryptedRealData.csv",Encrypt(content, CipherMode.CBC));
+            File.WriteAllBytes("EncryptedRealData.txt",Encrypt(content, CipherMode.CBC));
         }
 
         static void DecryptData(){
-            byte[] content = File.ReadAllBytes("EncryptedRealData.csv");
+            byte[] content = File.ReadAllBytes("EncryptedRealData.txt");
             byte[] key = File.ReadAllBytes("key.txt");
             byte[] iv = File.ReadAllBytes("iv.txt");
             DeleteFile("DecryptedRealData.txt");
-            File.WriteAllBytes("DecryptedRealData.csv", Decrypt(content, key, iv, CipherMode.CBC));
+            File.WriteAllBytes("DecryptedRealData.txt", Decrypt(content, key, iv, CipherMode.CBC));
         }
 
         public static byte[] Encrypt(byte[] input, CipherMode cipherMode)
         {
             Console.WriteLine("Encrypting Data");
+            Stopwatch watch = new Stopwatch();
+            byte[] val;
+            watch.Start();
             using (RijndaelManaged myRijndael = new RijndaelManaged { Mode = cipherMode })
             {
 
@@ -110,15 +106,23 @@ namespace DataGeneration
                     {
                         csEncrypt.Write(input, 0, input.Length);
                         csEncrypt.FlushFinalBlock();
-                        return msEncrypt.ToArray();
+                        val = msEncrypt.ToArray();
                     }
                 }
+                watch.Stop();
+                DeleteFile("Info.txt");
+                File.WriteAllText("Info.txt","Time for Encryption: " + watch.ElapsedMilliseconds + "ms");
+                Console.WriteLine("Finished Encrypting");
+                return val;
             }
         }
 
          public static byte[] Decrypt(byte[] input, byte[] key, byte[] iv, CipherMode cipherMode)
         {
-            Console.WriteLine("Encrypting Data");
+            Console.WriteLine("Decrypting Data");
+            Stopwatch watch = new Stopwatch();
+            byte[] val;
+            watch.Start();
             using (RijndaelManaged myRijndael = new RijndaelManaged { Mode = cipherMode })
             {
 
@@ -132,10 +136,14 @@ namespace DataGeneration
                     {
                         csEncrypt.Write(input, 0, input.Length);
                         csEncrypt.FlushFinalBlock();
-                        return msEncrypt.ToArray();
+                        val= msEncrypt.ToArray();
                     }
                 }
             }
+            watch.Stop();
+            File.AppendAllText("Info.txt","\nTime for Decryption: " + watch.ElapsedMilliseconds + "ms");
+            Console.WriteLine("Finished Decrypting");
+            return val;
         }
 
         public static void SpeedTest(){
