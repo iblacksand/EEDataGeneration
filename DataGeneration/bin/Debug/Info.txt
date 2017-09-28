@@ -1,2 +1,6 @@
 Time for Encryption: 161ms
 Time for Decryption: 137ms
+Time for Linear Encryption: 6ms
+Time for Linear Decryption: 5957ms
+Time for Linear Encryption: 13443ms
+Time for Linear Decryption: 8ms

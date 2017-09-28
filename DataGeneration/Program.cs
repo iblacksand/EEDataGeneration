@@ -28,6 +28,9 @@ namespace DataGeneration
                 case 3:
                     DecryptData();
                     break;
+                case 4:
+                    SpeedTest();
+                    break;
                 default:
                     Console.WriteLine("Invalid Choice");
                     goto LGetResponse;
@@ -147,7 +150,34 @@ namespace DataGeneration
         }
 
         public static void SpeedTest(){
-            // StopWatch 
+            int variation = 10;
+            string[] total = File.ReadAllLines("AllData.txt");
+            string[] fakes = File.ReadAllLines("FakeData.txt");
+            string[] reals = File.ReadAllLines("RealData.txt");
+            List<string> corrected = new List<string>(reals);
+            Stopwatch watch = new Stopwatch();
+            Console.WriteLine("Building total array");
+            watch.Start();
+            for(int i = 0; i < fakes.Length; i++){
+                corrected.Insert(i * variation, fakes[i]);
+            }
+            if(corrected.Count!= total.Length) Console.WriteLine("ERROR NOT RIGHT BRO");
+            watch.Stop();
+            File.AppendAllText("Info.txt","\nTime for Linear Encryption: " + watch.ElapsedMilliseconds + "ms");
+            Stopwatch swatch = new Stopwatch();
+            List<string> realdata = new List<string>();
+            string[] real = new string[reals.Length];
+            swatch.Start();
+            int c = 0;
+            for(int i = 0; i < corrected.Count; i++){
+                if(i % variation != 0){
+                    real[c] = corrected[i];
+                    c++;
+                }
+            }
+            swatch.Stop();
+            File.AppendAllText("Info.txt","\nTime for Linear Decryption: " + swatch.ElapsedMilliseconds + "ms");
+            File.WriteAllLines("LinearReals.txt", real);
         }
     }
 }
