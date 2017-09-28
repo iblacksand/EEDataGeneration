@@ -1,0 +1,2 @@
+KEY: System.Byte[]
+ IV: System.Byte[]
