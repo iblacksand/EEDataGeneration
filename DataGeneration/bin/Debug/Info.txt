@@ -4,3 +4,18 @@ Time for Linear Encryption: 6ms
 Time for Linear Decryption: 5957ms
 Time for Linear Encryption: 13443ms
 Time for Linear Decryption: 8ms
+Time for Linear Encryption: 4ms
+Time for Linear Decryption: 7ms
+Time for Linear Encryption: 6ms
+Time for Linear Decryption: 7ms
+Time for Quad Encryption: 15580ms
+Time for Quad Encryption: 14604ms
+Time for Quad Encryption: 14523ms
+Time for Quad Decryption: 17ms
+Time for Quad Encryption: 16347ms
+Time for Quad Encryption: 16405ms
+Time for Quad Encryption: 16353ms
+Time for Quad Encryption: 16189ms
+Time for Quad Decryption: 2501ms
+Time for Encryption: 201ms
+Time for Decryption: 187ms
