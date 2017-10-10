@@ -19,3 +19,6 @@ Time for Quad Encryption: 16189ms
 Time for Quad Decryption: 2501ms
 Time for Encryption: 201ms
 Time for Decryption: 187ms
+Time for Random Encryption: 22141ms
+Time for Random Encryption: 6ms
+Time for Random Encryption: 12ms
