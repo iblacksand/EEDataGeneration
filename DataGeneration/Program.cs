@@ -326,7 +326,6 @@ namespace DataGeneration
             string[] corrected = new string[total.Length];
             List<int> possibleNumbers = new List<int>(Enumerable.Range(0, total.Length));
             int f = 0;
-            List<int> gen = new List<int>();
             for (int i = possibleNumbers.Count; f < fakes.Length; i--)
             {
                 int x = rand.Next(i);
@@ -337,14 +336,36 @@ namespace DataGeneration
             int r = 0;
             for (int i = 0; i < corrected.Length; i++)
             {
-                if (corrected[i] != null)
+                if (corrected[i] == null)
                 {
                     corrected[i] = reals[r];
                     r++;
                 }
             }
             eWatch.Stop();
+            // if(new List<string>(corrected).Count != total.Length) Console.WriteLine("ERORROR ORfdsakfs kj");
             File.AppendAllText("Info.txt", "\nTime for Random Encryption: " + eWatch.ElapsedMilliseconds + "ms");
+            Stopwatch dWatch = new Stopwatch();
+            dWatch.Start();
+            List<string> rreals = new List<string>();
+            rand = new Random(seed);
+            f = 0;
+            possibleNumbers = new List<int>(Enumerable.Range(0, total.Length));
+            for (int i = possibleNumbers.Count; f < fakes.Length; i--)
+            {
+                int x = rand.Next(i);
+                corrected[possibleNumbers[x]] = null;
+                f++;
+                possibleNumbers[x] = possibleNumbers[i - 1];
+            }
+            for(int i = 0; i < corrected.Length; i++){
+                if(corrected[i] != null){
+                    rreals.Add(corrected[i]);
+                }
+            }
+            dWatch.Stop();
+            File.WriteAllLines("randomreals.txt", rreals.ToArray());
+            File.AppendAllText("Info.txt", "\nTime for Random Decryption: " + dWatch.ElapsedMilliseconds + "ms");
         }
     }
 
