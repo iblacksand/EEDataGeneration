@@ -15,7 +15,7 @@ namespace DataGeneration
         {
             int response = 0;
         LGetResponse:
-            string choices = "Actions:\n1. Generate New Fake and Real Data\n2. Generate Encrypted Data\n3. Decrypt Data\n4. Linear Test\n5. Quadratic Test";
+            string choices = "Actions:\n1. Generate New Fake and Real Data\n2. Generate Encrypted Data\n3. Decrypt Data\n4. Linear Test\n5. Quadratic Test\n6. Test Random Number Generation with same Seed\n 7. Random Index Speed";
             Console.WriteLine(choices);
             Int32.TryParse(Prompt("Choose an action.(EX: 1)"), out response);
             switch (response)
