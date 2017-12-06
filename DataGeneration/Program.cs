@@ -57,6 +57,9 @@ namespace DataGeneration {
                 case 11:
                     multirunLinear(Int32.Parse (Prompt ("How many runs to complete?")));
                     break;
+                    case 12:
+                    multirunQuadratic(Int32.Parse (Prompt ("How many runs to complete?")));
+                    break;
                 default:
                     Console.WriteLine ("Invalid Choice");
                     goto LGetResponse;
@@ -339,6 +342,82 @@ namespace DataGeneration {
             File.AppendAllText ("Info.txt", "\nTime for Random Decryption: " + dWatch.ElapsedMilliseconds + "ms");
         }
 
+        static void multirunQuadratic(int runs){
+            List<string> edata = new List<string>();
+            List<string> ddata = new List<string>();
+            for(int z = 0; z < runs; z++){
+            string[] total = File.ReadAllLines ("AllData.txt");
+            string[] fakes = File.ReadAllLines ("FakeData.txt");
+            string[] reals = File.ReadAllLines ("RealData.txt");
+            string[] corrected = new string[total.Length];
+            int[] indexes = new int[fakes.Length];
+            Stopwatch eWatch = new Stopwatch ();
+            int seed = Int32.Parse (Prompt ("What seed do you want? (32 bit int only)"));
+            eWatch.Start ();
+            // Console.Write(indexes[1]);
+            Random rand = new Random (seed);
+            QuadFunction fun = new QuadFunction (rand.Next (1000), rand.Next (1000), rand.Next (1000));
+            // Conso/le.WriteLine("Fakes: " + fakes.Length + "\nIndexes:" + indexes.Length);
+            for (int i = 0; i < fakes.Length; i++) {
+                int index = SafeIndex (indexes, Math.Abs (fun.Evaluate (i * seed) % total.Length), total.Length);
+                // Console.WriteLine(index);
+                corrected[index] = fakes[i];
+                // Console.WriteLine(i);
+                indexes[i] = index;
+            }
+            int r = 0;
+            for (int i = 0; i < total.Length; i++) {
+                if (r >= reals.Length) {
+                    Console.Write ("ERRORORRORORORORO\n");
+                    break;
+                }
+                if (!indexes.Contains (i)) {
+                    corrected[i] = reals[r];
+                    r++;
+                }
+            }
+            eWatch.Stop ();
+            File.AppendAllText ("Info.txt", "\nTime for Quad Encryption: " + eWatch.ElapsedMilliseconds + "ms");
+            bool dupsFound = false;
+
+            for (int i = 0; i < total.Length; i++) {
+                if (corrected[i] == null) {
+                    dupsFound = true;
+                    break;
+                }
+                if (corrected[i].Trim ().Equals ("")) {
+                    dupsFound = true;
+                    break;
+                }
+            }
+            if (dupsFound) Console.WriteLine ("FOUND DUPLICATES");
+            Stopwatch dWatch = new Stopwatch ();
+            dWatch.Start ();
+            string[] eReals = new string[reals.Length];
+            for (int i = 0; i < fakes.Length; i++) {
+                int index = SafeIndex (indexes, Math.Abs (fun.Evaluate (i * seed) % total.Length), total.Length);
+                corrected[index] = "";
+            }
+            int rr = 0;
+
+            for (int i = 0; i < total.Length; i++) {
+                if (rr >= eReals.Length) break;
+                if (corrected[i] != null && !corrected[i].Trim ().Equals ("")) {
+                    eReals[rr] = corrected[i];
+                    rr++;
+                }
+            }
+            dWatch.Stop ();
+            ddata.Add ((z + 1) + "," + dWatch.ElapsedMilliseconds);
+                edata.Add ((z + 1) + "," + eWatch.ElapsedMilliseconds);
+            }
+            File.WriteAllLines ("QuadEncryptionRun.csv", edata.ToArray ());
+            AverageTaker ("QuadEncryptionRun.csv");
+            File.WriteAllLines ("QuadDecryptionRun.csv", ddata.ToArray ());
+            AverageTaker ("QuadDecryptionRun.csv");
+            
+        }
+
         static void multirunEncryption (int runs) {
             List<string> data = new List<string> ();
             byte[] input = File.ReadAllBytes ("RealData.txt");
@@ -447,6 +526,9 @@ namespace DataGeneration {
             File.WriteAllLines("LinearDecryptionRuns.txt", ddata.ToArray());
             AverageTaker("LinearDecryptionRuns.txt");
     }
+
+        
+
         static void multirunRandom (int runs) {
             List<string> edata = new List<string> ();
             List<string> ddata = new List<string> ();
