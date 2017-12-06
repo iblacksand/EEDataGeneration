@@ -38,3 +38,5 @@ Time for Random Encryption: 12ms
 Time for Random Decryption: 18ms
 Time for Random Encryption: 15ms
 Time for Random Decryption: 61ms
+Time for Random Encryption: 18ms
+Time for Random Decryption: 44ms
