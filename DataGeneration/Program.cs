@@ -286,11 +286,6 @@ namespace DataGeneration {
             File.WriteAllLines ("QuadReals.txt", eReals);
             Console.WriteLine ("Finished");
         }
-
-        public static void Shifty () {
-
-        }
-
         public static void RandomIndexes () {
             int seed = Int32.Parse (Prompt ("Pick a seed:"));
 
