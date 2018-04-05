@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DataGeneration {
-    class Program {
+    class Program {     
         static void Main (string[] args) {
             int response = 0;
             LGetResponse:
-                string choices = "Actions:\n1. Generate New Fake and Real Data\n2. Generate Encrypted Data\n3. Decrypt Data\n4. Linear Test\n5. Quadratic Test\n6. Test Random Number Generation with same Seed\n 7. Random Index Speed\n8. Multiple Encrypted Run";
+                string choices = "Actions:\n1. Generate New Fake and Real Data\n2. Generate Encrypted Data\n3. Decrypt Data\n4. Linear Test\n5. Quadratic Test\n6. Test Random Number Generation with same Seed\n 7. Random Index Speed\n8. Multiple Encrypted Run\n9. Multiple Decryption Run\n10. Multiple Random Run\n11. Multiple Linear Run\n12. Multiple Quadratic Run";
             Console.WriteLine (choices);
             Int32.TryParse (Prompt ("Choose an action.(EX: 1)"), out response);
             switch (response) {
@@ -49,10 +49,10 @@ namespace DataGeneration {
                     multirunEncryption (Int32.Parse (Prompt ("How many runs to complete?")));
                     break;
                 case 9:
-                    multirunRandom (Int32.Parse (Prompt ("How many runs to complete?")));
-                    break;
-                case 10:
                     multirunDecryption (Int32.Parse (Prompt ("How many runs to complete?")));
+                    break;
+                 case 10:
+                    multirunRandom (Int32.Parse (Prompt ("How many runs to complete?")));
                     break;
                 case 11:
                     multirunLinear (Int32.Parse (Prompt ("How many runs to complete?")));
@@ -100,12 +100,11 @@ namespace DataGeneration {
             File.WriteAllLines ("RealData.txt", real.ToArray ());
             Console.WriteLine ("Done");
         }
-
         static void GenerateEncryptedData () {
             byte[] content = File.ReadAllBytes ("RealData.txt");
             DeleteFile ("EncryptedRealData.txt");
             DeleteFile ("key.txt");
-            DeleteFile ("iv.txt");
+            DeleteFile ("iv.txt");  
             File.WriteAllBytes ("EncryptedRealData.txt", Encrypt (content, CipherMode.CBC));
         }
 
@@ -224,7 +223,7 @@ namespace DataGeneration {
             string[] fakes = File.ReadAllLines ("FakeData.txt");
             string[] reals = File.ReadAllLines ("RealData.txt");
             string[] corrected = new string[total.Length];
-            int[] indexes = new int[fakes.Length];
+            int[] indexes = new int[fakes   .Length];
             Stopwatch eWatch = new Stopwatch ();
             int seed = Int32.Parse (Prompt ("What seed do you want? (32 bit int only)"));
             eWatch.Start ();
@@ -242,7 +241,7 @@ namespace DataGeneration {
             int r = 0;
             for (int i = 0; i < total.Length; i++) {
                 if (r >= reals.Length) {
-                    Console.Write ("ERRORORRORORORORO\n");
+                    Console.Write ("Error: To many reals\n");
                     break;
                 }
                 if (!indexes.Contains (i)) {
@@ -264,7 +263,7 @@ namespace DataGeneration {
                     break;
                 }
             }
-            if (dupsFound) Console.WriteLine ("FOUND DUPLICATES");
+            if (dupsFound) Console.WriteLine ("ERROR: FOUND DUPLICATES");
             Stopwatch dWatch = new Stopwatch ();
             dWatch.Start ();
             string[] eReals = new string[reals.Length];
@@ -287,8 +286,7 @@ namespace DataGeneration {
             Console.WriteLine ("Finished");
         }
         public static void RandomIndexes () {
-            int seed = Int32.Parse (Prompt ("Pick a seed:"));
-
+            int seed = Int32.Parse (Prompt("Pick a seed:"));
             string[] total = File.ReadAllLines ("AllData.txt");
             string[] fakes = File.ReadAllLines ("FakeData.txt");
             string[] reals = File.ReadAllLines ("RealData.txt");
@@ -313,7 +311,7 @@ namespace DataGeneration {
                 }
             }
             eWatch.Stop ();
-            // if(new List<string>(corrected).Count != total.Length) Console.WriteLine("ERORROR ORfdsakfs kj");
+            if(new List<string>(corrected).Count != total.Length) Console.WriteLine("ERROR: TOO MANY REALS");
             File.AppendAllText ("Info.txt", "\nTime for Random Encryption: " + eWatch.ElapsedMilliseconds + "ms");
             Stopwatch dWatch = new Stopwatch ();
             dWatch.Start ();

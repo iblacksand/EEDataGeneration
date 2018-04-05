@@ -3,3 +3,9 @@ C:\Users\user\Google Drive\School\ExtendedEssay\DataGeneration\DataGeneration\bi
 C:\Users\user\Google Drive\School\ExtendedEssay\DataGeneration\DataGeneration\bin\Debug\DataGeneration.pdb
 C:\Users\user\Google Drive\School\ExtendedEssay\DataGeneration\DataGeneration\obj\Debug\DataGeneration.exe
 C:\Users\user\Google Drive\School\ExtendedEssay\DataGeneration\DataGeneration\obj\Debug\DataGeneration.pdb
+C:\Users\chess\Dropbox\School\ExtendedEssay\DataGeneration\DataGeneration\obj\Debug\DataGeneration.exe
+C:\Users\chess\Dropbox\School\ExtendedEssay\DataGeneration\DataGeneration\obj\Debug\DataGeneration.pdb
+C:\Users\chess\Dropbox\School\ExtendedEssay\DataGeneration\DataGeneration\obj\Debug\DataGeneration.csproj.CoreCompileInputs.cache
+C:\Users\chess\Dropbox\School\ExtendedEssay\DataGeneration\DataGeneration\bin\Debug\DataGeneration.exe.config
+C:\Users\chess\Dropbox\School\ExtendedEssay\DataGeneration\DataGeneration\bin\Debug\DataGeneration.exe
+C:\Users\chess\Dropbox\School\ExtendedEssay\DataGeneration\DataGeneration\bin\Debug\DataGeneration.pdb
