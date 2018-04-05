@@ -362,7 +362,7 @@ namespace DataGeneration {
                 int r = 0;
                 for (int i = 0; i < total.Length; i++) {
                     if (r >= reals.Length) {
-                        Console.Write ("ERRORORRORORORORO\n");
+                        Console.Write ("ERROR\n");
                         break;
                     }
                     if (!indexes.Contains (i)) {
@@ -371,7 +371,7 @@ namespace DataGeneration {
                     }
                 }
                 eWatch.Stop ();
-                File.AppendAllText ("Info.txt", "\nTime for Quad Encryption: " + eWatch.ElapsedMilliseconds + "ms");
+                // File.AppendAllText ("Info.txt", "\nTime for Quad Encryption: " + eWatch.ElapsedMilliseconds + "ms");
                 bool dupsFound = false;
 
                 for (int i = 0; i < total.Length; i++) {
@@ -584,7 +584,7 @@ namespace DataGeneration {
                 total += Double.Parse (file[i].Split (',') [1]);
             }
             double avg = total / file.Length;
-            File.AppendAllText (path, "\nAVERGAGE: " + avg);
+            File.AppendAllText (path, "\nAVERAGE: " + avg);
         }
 
         public class QuadFunction {
